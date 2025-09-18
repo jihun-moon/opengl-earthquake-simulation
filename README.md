@@ -41,7 +41,7 @@ OpenGL과 C++를 기반으로 지진 발생 시의 교실, 복도, 운동장 상
 
 ## 📸 Demo
 
-<p align="center">
+<p align="left">
   <img src="./assets/earthquake-simulation-demo.gif" alt="지진 대피 시뮬레이션 데모" width="700"/>
   <br/>
   <i>시네마틱 뷰와 1인칭 뷰를 포함한 최종 시뮬레이션 데모</i>
