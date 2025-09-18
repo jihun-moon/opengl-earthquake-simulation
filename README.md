@@ -34,7 +34,7 @@
 
 ## 📸 최종 결과물 (GIF Demo)
 
-<p align="center">
+<p align="left">
   <img src="./assets/earthquake-simulation-demo.gif" alt="재난 안전 교육 애니메이션 데모" width="700"/>
   <br/>
   <i>시네마틱 뷰와 1인칭 뷰를 포함한 최종 시뮬레이션 데모</i>
