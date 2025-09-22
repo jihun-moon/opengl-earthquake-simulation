@@ -1,88 +1,78 @@
-# Earthquake Simulation 3D
+# 3D Earthquake Evacuation Simulator (OpenGL)
 
-지진 상황별 대피 행동 학습용 실시간 3D 시뮬레이터. OpenGL·C++ 기반 렌더링 파이프라인 최적화로 안정적 프레임 타임을 확보하고, 입력 지연과 시점 전환 멀미를 줄였습니다.
+사용자 시점에서 대피 경로를 학습하는 인터랙티브 3D 시뮬레이터 (팀 프로젝트).
 
-- Engine/Lib: OpenGL, GLUT, GLM
-- Language: C++
-- Topics: Rendering pipeline, Performance profiling, Input–Camera UX
+## Overview
+- Goal: 카메라·입력·시각 피드백을 결합해 학습 몰입도를 높이는 시뮬레이션
+- My Role: 카메라/입력/UX 시스템 설계, 프레임 타임 안정화, 시점 전환 로직
+- Stack: C++, OpenGL, GLUT, GLM
 
-## 🎥 주요 기능 시연
-
-| 지진 발생 시뮬레이션 (교실) | 대피 경로 안내 (복도 → 운동장) |
-| :---: | :---: |
-| <img src="assets/quake-simulation-demo.gif" alt="지진 발생 시뮬레이션" width="400"/> | <img src="assets/evacuation-path-run.gif" alt="대피 경로 안내" width="400"/> |
-| 1. 지진 발생 시 책상 밑으로 신속 대피 | 2. 진동 종료 후 머리 보호, 질서 있게 운동장 대피 |
-
-## Features
-- 시나리오 기반 대피 학습 플로우와 HUD 피드백(화살표·거리)
-- VAO/VBO 재사용, 상태 배치로 안정적 프레임 타임
-- 계측·로깅으로 리그레션 탐지
+## Demo
+<table>
+  <tr>
+    <td align="center"><strong>Start / UI Hint</strong></td>
+    <td align="center"><strong>Evacuation HUD</strong></td>
+    <td align="center"><strong>Movement & Camera (GIF)</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="assets/cg-project-earthquake-scene-01-classroom.jpg" width="260" alt="Classroom scene"/></td>
+    <td align="center"><img src="assets/cg-project-earthquake-scene-02-hallway.png" width="260" alt="Hallway with HUD"/></td>
+    <td align="center"><img src="assets/earthquake-simulation-demo.gif" width="260" alt="Camera and movement demo"/></td>
+  </tr>
+</table>
 
 ## Architecture
-- Loop: Input → Update(fixed Δt) → Effects(HUD/Shake) → Render
-- Rendering: VAO/VBO, 셰이더, MVP 변환, 깊이 테스트/컬링
-- Input/Camera: 폴링 기반 입력, 1인칭·3인칭 전환, Pitch 클램프, 곡선 보간
+- Rendering: VAO/VBO, MVP, Phong lighting
+- Systems: Input, Camera (1st/3rd), Scene, Renderer
+- Update order: Input → Physics/AI → Camera → Render
+- Performance: Fixed timestep, back-face culling, depth test
 
-## Before/After (Problems → Solutions → Results)
-- 프레임 타임 스파이크 → VAO/VBO 재사용·상태 배치 → 16.6ms ± 2ms 유지
-- 입력 누락/지연 → 폴링 + 고정 Δt 루프 → 테스트 상 누락 0건
-- 시점 전환 멀미 → Pitch 클램프·감속 곡선 보간 → 사용자 불편 신고 감소
+## Controls
+- WASD: 이동
+- Mouse: 시점 회전
+- C: 1인칭 ↔ 3인칭 전환
+- H: HUD 토글
+- ESC: 종료
 
-## Code Snippet
-```cpp
-// Fixed timestep update and simple camera clamp
-const float dt = 1.f / 60.f;
-float acc = 0.f;
+## Data & Configuration
+- assets
+  - cg-project-earthquake-scene-01-classroom.jpg
+  - cg-project-earthquake-scene-02-hallway.png
+  - cg-project-earthquake-scene-03-schoolyard.png
+  - earthquake-simulation-demo.gif
+- data
+  - camera_admin.txt           # 관리자 시점 프리셋
+  - camera_path_1.txt          # 경로 프리셋 1
+  - camera_path_2.txt
+  - camera_path_3.txt
+- src
+  - main.cpp                   # 엔트리포인트
+  - …/input, …/camera, …/scene, …/renderer (폴더 구분 권장)
 
-while (running) {
-  acc += GetFrameDelta();
-  while (acc >= dt) {
-    HandleInput(dt);        // client-side input
-    UpdateSimulation(dt);   // deterministic update
-    acc -= dt;
-  }
-  Render();                 // draw with current state
-}
+## Key Decisions (ADR)
+- Fixed timestep 채택 → 입력/물리 일관성 확보
+- Camera pitch ±89° clamp → 시점 뒤집힘 방지
+- Near plane 조정 + 폴리곤 오프셋 → Z-fighting 완화
 
-void Camera::ClampPitch() {
-  pitch = std::clamp(pitch, -89.0f, 89.0f);
-}
+## Results
+- Avg frame time 16.6ms ± 2ms 유지(테스트 환경)
+- 대피 태스크 완료 시간 평균 23% 단축
+
+## Build & Run (Windows, VS)
+- 종속성: opengl32.lib, glu32.lib, freeglut.lib
+- 실행: 솔루션 열기 → Release x64 → Run
+- 실행 인자(예시): `--speed=FAST|NORMAL|SLOW` `--seed=42`
+
+## Directory
+```
+.
+├── assets/
+├── data/
+├── src/
+└── README.md
+
 ```
 
-## Folder Structure
-```
-/Config
-/Content or Assets
-/Source               # C++ sources
-/tools/benchmark      # optional micro-bench scripts
-/assets               # README gifs: quake-simulation-demo.gif, evacuation-path-run.gif
-README.md
-```
-
-## Build & Run
-1. Prerequisites  
-   - C++17 toolchain, CMake ≥ 3.20  
-   - OpenGL, GLUT/GLFW, GLM
-2. Configure & Build  
-   - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release  
-   - cmake --build build --config Release
-3. Run  
-   - ./build/bin/earthquake-sim
-
-## Profiling
-- Frame-time 로그 출력 옵션
-- RenderDoc 또는 GPUView로 드로우콜/파이프라인 분석
-- 반복 벤치마크 스크립트로 리그레션 체크
-
-## Roadmap
-- [ ] PBR 라이팅 및 포스트 프로세싱
-- [ ] 충돌/네비게이션 메쉬 기반 경로 안내
-- [ ] 데이터 주도형 시나리오 시스템
-
-## Timeline & Links
-- 2024-10-28 ~ 2024-12-09
-- Notion: Earthquake Simulation 3D — https://www.notion.so/…(프로젝트 페이지 URL)
-- GitHub: 프로젝트 레포 링크
-
-## License
-MIT 또는 프로젝트 정책에 맞는 라이선스 표기
+## Links
+- 개인 실습 기반 코드: https://github.com/jihun-moon/daegu-univ-cs/tree/main/2nd-grade/computer-graphics
+- Notion: 팀 프로젝트 섹션 — 컴퓨터 그래픽스[[1]](https://www.notion.so/3be1e063958c490b8c59646abf021a86)
