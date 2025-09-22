@@ -6,11 +6,12 @@
 - Language: C++
 - Topics: Rendering pipeline, Performance profiling, Input-Camera UX
 
-## Demo
-![Quake Simulation](assets/quake-simulation-demo.gif)
-![Evacuation Path Run](assets/evacuation-path-run.gif)
+## 🎥 주요 기능 시연
 
-assets 경로는 레포 구조에 맞게 수정하세요.
+| 지진 발생 시뮬레이션 (교실) | 대피 경로 안내 (복도 → 운동장) |
+| :---: | :---: |
+| <img src="assets/quake-simulation-demo.gif" alt="지진 발생 시뮬레이션" width="400"/> | <img src="assets/evacuation-path-run.gif" alt="대피 경로 안내" width="400"/> |
+| 1. 지진이 발생하면, 안내에 따라 책상 밑으로 신속히 대피합니다. | 2. 진동이 멈춘 후, 머리를 보호하며 질서있게 운동장으로 대피합니다. |
 
 ## Features
 - 시나리오 기반 대피 학습 플로우와 HUD 피드백(화살표·거리)
