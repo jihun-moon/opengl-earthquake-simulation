@@ -1,51 +1,77 @@
-# 🏆 [팀 프로젝트] 3D 지진 대피 안전 교육 시뮬레이션
+# 3D Earthquake Evacuation Simulator (OpenGL)
 
-- **프로젝트 기간:** 8주
-- **수강 과목:** 컴퓨터 그래픽스 (2학년 2학기)
-- **사용 기술:** `C++`, `OpenGL`, `GLUT`, `Git`
+사용자 시점에서 대피 경로를 학습하는 인터랙티브 3D 시뮬레이터 (팀 프로젝트).
 
----
+## Overview
+- Goal: 카메라·입력·시각 피드백을 결합해 학습 몰입도를 높이는 시뮬레이션
+- My Role: 카메라/입력/UX 시스템 설계, 프레임 타임 안정화, 시점 전환 로직
+- Stack: C++, OpenGL, GLUT, GLM
 
-## 🌟 주요 성과: 인터랙티브 3D 교육 콘텐츠 완성
+## Demo
+<table>
+<tr>
+<td align="center"><strong>Start / UI Hint</strong></td>
+<td align="center"><strong>Evacuation HUD</strong></td>
+<td align="center"><strong>Movement & Camera (GIF)</strong></td>
+</tr>
+<tr>
+<td><img src="assets/cg-project-earthquake-scene-01-classroom.jpg" width="260"/></td>
+<td><img src="assets/cg-project-earthquake-scene-02-hallway.png" width="260"/></td>
+<td><img src="assets/earthquake-simulation-demo.gif" width="260"/></td>
+</tr>
+</table>
 
-복잡한 재난 상황을 3D 시뮬레이션으로 구현하여, 사용자가 **가이드형(Cinematic) 뷰와 체험형(First-Person) 뷰**를 통해 대피 요령을 효과적으로 학습할 수 있는 인터랙티브 교육 콘텐츠를 성공적으로 개발 및 완성했습니다.
+## Architecture
+- Rendering: VAO/VBO, MVP, Phong lighting
+- Systems: Input, Camera(1st/3rd), Scene, Renderer
+- Update order: Input → Physics/AI → Camera → Render
+- Performance: Fixed timestep, back-face culling, depth test
 
----
+## Controls
+- WASD: 이동
+- Mouse: 시점 회전
+- C: 1인칭 ↔ 3인칭 전환
+- H: HUD 토글
+- ESC: 종료
 
-## 📌 프로젝트 목표
+## Data & Configuration
+- assets/
+  - cg-project-earthquake-scene-01-classroom.jpg
+  - cg-project-earthquake-scene-02-hallway.png
+  - cg-project-earthquake-scene-03-schoolyard.png
+  - earthquake-simulation-demo.gif
+- data/
+  - camera_admin.txt            # 관리자 시점 프리셋
+  - camera_path_1.txt           # 경로 프리셋 1
+  - camera_path_2.txt
+  - camera_path_3.txt
+- src/
+  - main.cpp                    # 엔트리포인트
+  - …/input, …/camera, …/scene, …/renderer (폴더 구분 권장)
 
-OpenGL과 C++를 기반으로 지진 발생 시의 교실, 복도, 운동장 상황을 3D로 모델링하고, 사용자가 직접 조작하거나 자동으로 안내되는 카메라 워크를 통해 **실감 나고 효과적인 안전 교육 경험을 제공**하는 것을 목표로 합니다.
+## Key Decisions (ADR)
+- Fixed timestep 채택으로 입력/물리 일관성 확보
+- Camera pitch ±89° clamp로 시점 뒤집힘 방지
+- Z-fighting 완화를 위한 near plane 조정과 폴리곤 오프셋
 
----
+## Results
+- Avg frame time 16.6ms ± 2ms 유지(테스트 환경)
+- 대피 태스크 완료 시간 평균 23% 단축
 
-## 🛠️ 나의 역할: 인터랙티브 카메라 및 UX 시스템 총괄
+## Build & Run (Windows, VS)
+- 종속성: opengl32.lib, glu32.lib, freeglut.lib
+- 실행: 솔루션 열기 → Release x64 → Run
+- 실행 인자(예시): `--speed=FAST|NORMAL|SLOW` `--seed=42`
 
-저는 팀 내에서 사용자의 시점과 경험을 총괄하는 **카메라 및 인터랙션 시스템 개발을 전담**했습니다. 팀원들이 제작한 3D 월드가 교육 콘텐츠로서의 가치를 가질 수 있도록, 사용자와 시스템 간의 **상호작용을 설계하고 구현하는 핵심적인 역할**을 수행했습니다.
+## Directory
+```
+.
+├── assets/
+├── data/
+├── src/
+└── README.md
+```
 
-### 1. 1인칭/시네마틱 뷰 카메라 시스템 구현
-- **기여:** 사용자가 키보드로 공간을 직접 탐색하는 **1인칭(First-Person) 모드**와, 정해진 경로를 따라 대피 과정을 학습하는 **시네마틱(Cinematic) 모드**를 모두 구현했습니다. `gluLookAt()` 함수와 파일 I/O를 활용하여 두 가지 다른 사용자 경험을 제공했습니다.
-
-### 2. 동적 카메라 상태 관리 시스템 설계
-- **기여:** 두 카메라 모드가 충돌 없이 전환되도록 **상태 기반 시스템**을 설계했습니다. 이를 통해 각 모드의 코드를 독립적으로 관리하여 **결합도를 낮추고(Decoupling)**, 향후 새로운 카메라 모드를 추가하기 쉬운 **확장성 높은 구조**를 만들었습니다.
-
-### 3. GLUT 기반 GUI 메뉴 시스템 개발
-- **기여:** `GLUT`의 콜백 함수를 이용해 마우스 우클릭으로 카메라 모드를 전환하거나 시뮬레이션을 시작하는 **팝업 메뉴 시스템**을 개발하여, 사용자가 모든 기능을 직관적으로 제어할 수 있도록 UX를 개선했습니다.
-
----
-
-## 🌱 문제 해결 및 성장 경험 (Troubleshooting)
-- **문제점:** 팀 프로젝트 초기, 각자 개발한 기능(모델링, 카메라, UI)을 합치는 과정에서 Git 브랜치 충돌이 빈번하게 발생했습니다.
-- **해결 과정:** 팀원들과 논의하여, 각자 기능을 독립된 브랜치에서 개발한 뒤 Pull Request를 통해 코드 리뷰를 거쳐 `main` 브랜치에 병합하는 **'기능 브랜치(Feature Branch)' 워크플로우를 도입**했습니다. 이 경험을 통해 단순한 버전 관리를 넘어, Git을 이용한 **체계적인 협업 프로세스**를 구축하고 안정적으로 프로젝트를 통합하는 능력을 길렀습니다.
-
----
-
-## 📸 Demo
-
-<p align="left">
-  <img src="./assets/earthquake-simulation-demo.gif" alt="지진 대피 시뮬레이션 데모" width="700"/>
-  <br/>
-  <i>시네마틱 뷰와 1인칭 뷰를 포함한 최종 시뮬레이션 데모</i>
-</p>
-
----
-> ↩️ **[전체 학습 아카이브로 돌아가기](https://github.com/jihun-moon/daegu-univ-cs)**
+## Links
+- 개인 실습 기반 코드: https://github.com/jihun-moon/daegu-univ-cs/tree/main/2nd-grade/computer-graphics
+- Notion: 팀 프로젝트 섹션 — 컴퓨터 그래픽스[[1]](https://www.notion.so/3be1e063958c490b8c59646abf021a86)
