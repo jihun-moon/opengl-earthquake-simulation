@@ -9,21 +9,21 @@
 
 ## Demo
 <table>
-<tr>
-<td align="center"><strong>Start / UI Hint</strong></td>
-<td align="center"><strong>Evacuation HUD</strong></td>
-<td align="center"><strong>Movement & Camera (GIF)</strong></td>
-</tr>
-<tr>
-<td><img src="assets/cg-project-earthquake-scene-01-classroom.jpg" width="260"/></td>
-<td><img src="assets/cg-project-earthquake-scene-02-hallway.png" width="260"/></td>
-<td><img src="assets/earthquake-simulation-demo.gif" width="260"/></td>
-</tr>
+  <tr>
+    <td align="center"><strong>Start / UI Hint</strong></td>
+    <td align="center"><strong>Evacuation HUD</strong></td>
+    <td align="center"><strong>Movement & Camera (GIF)</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="assets/cg-project-earthquake-scene-01-classroom.jpg" width="260" alt="Classroom scene"/></td>
+    <td align="center"><img src="assets/cg-project-earthquake-scene-02-hallway.png" width="260" alt="Hallway with HUD"/></td>
+    <td align="center"><img src="assets/earthquake-simulation-demo.gif" width="260" alt="Camera and movement demo"/></td>
+  </tr>
 </table>
 
 ## Architecture
 - Rendering: VAO/VBO, MVP, Phong lighting
-- Systems: Input, Camera(1st/3rd), Scene, Renderer
+- Systems: Input, Camera (1st/3rd), Scene, Renderer
 - Update order: Input → Physics/AI → Camera → Render
 - Performance: Fixed timestep, back-face culling, depth test
 
@@ -35,24 +35,24 @@
 - ESC: 종료
 
 ## Data & Configuration
-- assets/
+- assets
   - cg-project-earthquake-scene-01-classroom.jpg
   - cg-project-earthquake-scene-02-hallway.png
   - cg-project-earthquake-scene-03-schoolyard.png
   - earthquake-simulation-demo.gif
-- data/
-  - camera_admin.txt            # 관리자 시점 프리셋
-  - camera_path_1.txt           # 경로 프리셋 1
+- data
+  - camera_admin.txt           # 관리자 시점 프리셋
+  - camera_path_1.txt          # 경로 프리셋 1
   - camera_path_2.txt
   - camera_path_3.txt
-- src/
-  - main.cpp                    # 엔트리포인트
+- src
+  - main.cpp                   # 엔트리포인트
   - …/input, …/camera, …/scene, …/renderer (폴더 구분 권장)
 
 ## Key Decisions (ADR)
-- Fixed timestep 채택으로 입력/물리 일관성 확보
-- Camera pitch ±89° clamp로 시점 뒤집힘 방지
-- Z-fighting 완화를 위한 near plane 조정과 폴리곤 오프셋
+- Fixed timestep 채택 → 입력/물리 일관성 확보
+- Camera pitch ±89° clamp → 시점 뒤집힘 방지
+- Near plane 조정 + 폴리곤 오프셋 → Z-fighting 완화
 
 ## Results
 - Avg frame time 16.6ms ± 2ms 유지(테스트 환경)
