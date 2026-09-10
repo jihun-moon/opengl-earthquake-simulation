@@ -1,7 +1,8 @@
 # OpenGL 지진 대피 시뮬레이션
 
 학교 건물을 3D로 만들고, 1인칭으로 교실에서 복도를 거쳐 운동장까지 대피해 보는 시뮬레이터입니다.
-컴퓨터그래픽스 학기 프로젝트로 만들었습니다.
+컴퓨터그래픽스 학기 프로젝트로 3명이 만들었습니다(2024-10 ~ 12).
+저는 지진 흔들림, 1인칭 카메라와 이동, 카메라 경로 녹화·재생, 강의실 내부 모델링을 맡았습니다.
 
 <p>
   <img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white"/>
@@ -83,7 +84,7 @@
 saveCameraPath()    현재 위치와 시선을 한 줄로 기록
 recordCameraPath()  매 프레임 기록
 followCameraPath()  저장된 경로를 프레임 단위로 재생
-loadCameraPaths()   data/*.txt 를 전부 읽어서 경로 목록 구성
+loadCameraPaths()   코드에 적힌 파일 4개를 읽어서 경로 목록 구성
 ```
 
 파일 한 줄이 카메라 상태 하나입니다. 위치 3개와 시선 방향 3개, 총 6개 값입니다.
@@ -103,7 +104,7 @@ loadCameraPaths()   data/*.txt 를 전부 읽어서 경로 목록 구성
 
 코드를 안 고치고 텍스트 파일만 바꾸면 시연 동선이 바뀝니다.
 `std::vector<std::vector<CameraState>>` 로 여러 경로를 동시에 들고 있어서
-경로를 추가하면 파일만 넣으면 됩니다.
+경로를 늘리는 건 파일 추가와 `loadCameraPaths()` 의 파일 이름 목록 한 줄이면 됩니다.
 
 <br/>
 
@@ -162,12 +163,13 @@ g++ src/main.cpp -o simulation -lGL -lGLU -lglut && ./simulation
 **macOS**
 
 ```bash
+# macOS 는 확인 못 했다. 코드가 <GL/glut.h> 를 쓰는데 macOS 기본 헤더는 <GLUT/glut.h> 라 그대로는 안 될 것 같다
 clang++ src/main.cpp -o simulation -framework OpenGL -framework GLUT && ./simulation
 ```
 
 **Windows** 는 Visual Studio 에서 NuGet `nupengl.core` 를 넣으면 바로 됩니다.
 
-실행하면 `data/` 의 경로 파일을 읽으므로 저장소 루트에서 실행해야 합니다.
+코드가 경로 파일을 `data/` 없이 파일 이름으로만 열어서, `data/` 폴더 안에서 실행해야 경로가 읽힙니다 (`cd data && ../simulation`).
 
 <br/>
 
