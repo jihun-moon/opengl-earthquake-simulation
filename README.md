@@ -13,7 +13,8 @@
   <a href="https://www.notion.so/3D-e7aa1e73062e477ba05e0971de5bef18?source=copy_link"><img src="https://img.shields.io/badge/회고-Notion-000000?style=flat-square&logo=notion&logoColor=white"/></a>
 </p>
 
-<p><img src="assets/earthquake-simulation-demo.gif" alt="시연" width="60%"></p>
+<p><img src="assets/earthquake-simulation-demo.gif" alt="시연" width="60%"><br>
+<sub>원본 화질 mp4 800x600 · 50fps · <a href="assets/earthquake-simulation-demo.mp4">시연 영상</a></sub></p>
 
 <br/>
 
